@@ -16,4 +16,4 @@ COPY --from=build-env /App/out .
 # Exposing port for docker container
 EXPOSE 5005
 
-ENTRYPOINT ["dotnet", "MultiApi.dll"]
+ENTRYPOINT ["dotnet", "weather-tabel.dll"]

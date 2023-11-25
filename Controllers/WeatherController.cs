@@ -8,8 +8,10 @@ namespace dotnet_site.Controllers
     public class WeatherController : ControllerBase
     {
         private IMemoryCache cache;
-        public WeatherController(IMemoryCache cache)
+        private IConfiguration configuration;
+        public WeatherController(IMemoryCache cache, IConfiguration configuration)
         {
+            this.configuration = configuration;
             this.cache = cache;
         }
         
@@ -27,7 +29,7 @@ namespace dotnet_site.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
-                    result = (await client.GetStringAsync("https://api.openweathermap.org/data/2.5/weather?lat=53.1384&lon=29.2214&appid=03504050d0e1fddb0e834af230d931d8")).ToString();
+                    result = (await client.GetStringAsync($"https://api.openweathermap.org/data/2.5/weather?lat=53.1384&lon=29.2214&appid={configuration.GetValue<string>("WeatherMapKey")}")).ToString();
                     cache.Set("weather", (object)result, DateTime.Now.AddMinutes(5));
                     Console.WriteLine("Im there" + DateTime.Now.ToShortTimeString());
                 }

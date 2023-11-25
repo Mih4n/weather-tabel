@@ -1,0 +1,234 @@
+/* Указываем box sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Убираем внутренние отступы */
+ul[class],
+ol[class] {
+  padding: 0;
+}
+
+/* Убираем внешние отступы */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+ul[class],
+ol[class],
+li,
+figure,
+figcaption,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+/* Выставляем основные настройки по-умолчанию для body */
+body {
+  min-height: 100vh;
+  scroll-behavior: smooth;
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+}
+
+/* Удаляем стандартную стилизацию для всех ul и il, у которых есть атрибут class*/
+ul[class],
+ol[class] {
+  list-style: none;
+}
+
+/* Элементы a, у которых нет класса, сбрасываем до дефолтных стилей */
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
+
+/* Упрощаем работу с изображениями */
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* Указываем понятную периодичность в потоке данных у article*/
+article > * + * {
+  margin-top: 1em;
+}
+
+/* Наследуем шрифты для инпутов и кнопок */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Удаляем все анимации и переходы для людей, которые предпочитай их не использовать */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@500&display=swap');
+h1,h2,h3,h4,h5,h6,p{font-family: 'Ubuntu', sans-serif;}
+h1{
+    font-size: 2.22vw;
+} 
+h2{
+    font-size: 1.66vw;
+}
+h3{
+    font-size: 1.4vw;
+}
+h4{
+    font-size: 1.11vw;
+}
+h5{
+    font-size: 0.92vw;
+}
+h6{
+    font-size: 0.83vw;
+}
+p{
+    font-size: 1.11vw;
+}
+header{
+  display: flex;
+  width: 80vw;
+  margin: 0 auto;
+  padding: 0 0.69vw;
+
+  background-color: #eeeeee;
+  border-radius: 0 0 0.69vw 0.69vw;
+  justify-content: space-between;
+}
+.slider{
+    display: flex;
+    position: absolute;
+    left: 0;
+    transition: left 1s;
+}
+body{
+    background-color: #fff;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+main{
+    height: 100vh;
+    width: 100vw;
+}
+.card{
+  padding: 2vw;
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  height: 70vh;
+  width: 80vw;
+
+  background-color: #eeeeee;
+
+  border-radius: 4vw;
+}
+.part{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 100vh;
+    width: 100vw;
+
+    margin: -3.33vw 0 0 0;
+}
+
+.partSimbol{
+    height: 100%;
+    width: 100%;
+    margin: 0 0;
+
+    border-radius: 0.69vw 2.5vw 2.5vw 0.69vw;
+}
+
+.slider.nextPart{
+    left: -100vw;
+}
+.textHolder{
+    display: flex;
+    width: 100%;
+    height: 100%;
+
+    margin: 0 0.8vw 0 0;
+    border-radius: 2.5vw 0.69vw 0.69vw 2.5vw;
+    padding: 0.69vw;
+}
+.outDoorPart .textHolder{
+    background-color: #656d78;
+}
+.inSchoolPart .textHolder{
+  background-color: #d1d3d3;  
+}
+
+.tHolder{
+  width: 100%;
+  height: 100%;
+  display: flex;
+
+  background-color: #dff1ff;
+  border-radius: 2vw;
+}
+
+.pHolder, .hHolder{
+  width: 7vw;
+  height: 100%;
+  display: flex;
+
+  background-color: #8a9249;
+
+  border-radius: 1.5vw;
+}
+
+.pHolder{
+  background-color: #f09b8c;
+}
+
+.hHolder{
+  background-color: #82a5cd;
+  margin: 1vw 0 0 0;
+}
+
+.hHolder h1{
+  margin: auto 0 auto auto;
+}
+.pHolder h2{
+  margin: auto;
+}
+.tHolder h1{
+  margin: auto auto auto 0;
+  font-size: 5vw;
+}
+
+.inSchoolPart .tHolder{
+  background-color: #333e48;
+
+  color: #d1d3d3;
+}
+
+.inSchoolPart .hHolder{
+  height: 100%;
+  background-color: #82a5cd;
+  margin: 0;
+}
+.time{
+  display: flex;
+}

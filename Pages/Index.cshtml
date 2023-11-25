@@ -1,0 +1,179 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<header>
+    <h1 class="time"><img src="clocks.svg" style="height: 2.22vw; margin: auto 0;"><span id="datetime"></span></h1>
+    <h1 class="lessonFreeTimeTimer"><span id="lessonOrFreeTime">перемена</span> - <span
+            id="timeBeforeEndMinuts">5</span>:<span id="timeBeforeEndSeconds">30</span></h1>
+</header>
+<main>
+    <div class="slider nextPart" id="mainSlider">
+        <div class="inSchoolPart part">
+            <div class="card">
+                <div class="textHolder">
+                    <div class="tHolder"><img src="temp.svg" style="height: 5vw; margin: auto 0 auto auto;">
+                        <h1 id="inSchoolTempHolder">31.1ᵒC</h1>
+                    </div>
+                    <div style="display: flex; flex-direction: column; margin: 0 0 0 1vw;">
+                        <div class="hHolder" id="hHolderInSchool" style="">
+                            <h1 id="inSchoolHumidityHolder">80</h1><img src="humidity.png"
+                                style="height: 2.22vw; margin: auto auto auto 0;"></img>
+                        </div>
+                    </div>
+                </div>
+                <img src="da.jpg" class="partSimbol">
+            </div>
+        </div>
+        <div class="outDoorPart part">
+            <div class="card">
+                <div class="textHolder">
+                    <div class="tHolder"><img src="temp.svg" style="height: 5vw; margin: auto 0 auto auto;">
+                        <h1 id="outDoorTempHolder">31.1C</h1>
+                    </div>
+                    <div style="display: flex; flex-direction: column; margin: 0 0 0 1vw;">
+                        <div class="pHolder">
+                            <h2 id="outDoorPressureHolder">750</h2><img src="pressure.svg"
+                                style="height: 2.22vw; margin: auto auto auto 0;"></img>
+                        </div>
+                        <div class="hHolder">
+                            <h1 id="outDoorHumidityHolder">80</h1><img src="humidity.png"
+                                style="height: 2.22vw; margin: auto auto auto 0;"></img>
+                        </div>
+                    </div>
+                </div>
+                <img src="dadada.jpg" class="partSimbol">
+            </div>
+        </div>
+    </div>
+</main>
+
+@section scripts{
+    <script>
+        let lessons = [];
+
+        fetch('http://localhost:5102/api/lessons')
+                .then(res => {
+                    return res.json();
+                })
+                .then(data => {
+                    lessons = data;
+                })
+                .catch(error => console.log(error));
+        
+        console.log(lessons);
+
+        setInterval(() => {
+            fetch('http://localhost:5102/api/lessons')
+                .then(res => {
+                    return res.json();
+                })
+                .then(data => {
+                    lessons = data;
+                })
+                .catch(error => console.log(error));
+        }, 60000)
+        
+        setInterval(() => { document.getElementById("mainSlider").classList.toggle("nextPart") }, 6000);
+
+        var dt = new Date();
+        document.getElementById("datetime").innerHTML = dt.toLocaleTimeString();
+        let isABreack = false;
+
+        setInterval(() => {
+            var dt = new Date();
+            document.getElementById("datetime").innerHTML = dt.toLocaleDateString() + " " + dt.toLocaleTimeString();
+            var time;
+            var timeInSeconds = dt.getSeconds() + dt.getHours() * 3600 + dt.getMinutes() * 60;
+
+            let i = 0;
+            for (const element of lessons) {
+                if (getTimeInSeconds(element.startTime) <= timeInSeconds && getTimeInSeconds(element.finishTime) >= timeInSeconds) {
+                    time = getTimeInSeconds(element.finishTime)
+                    isABreack = false;
+
+                    break;
+                }
+                else {
+                    isABreack = true;
+                }
+                i++
+            }
+            for (var j = 0; j < lessons.length; j++) {
+                if (getTimeInSeconds(lessons[j].finishTime) < timeInSeconds && getTimeInSeconds(lessons[j + 1].startTime) > timeInSeconds) {
+                    time = getTimeInSeconds(lessons[j + 1].startTime);
+                    break;
+                }
+            }
+
+            if (isABreack == true) {
+                document.getElementById("lessonOrFreeTime").innerText = "до конца перемены";
+            }
+            else {
+                document.getElementById("lessonOrFreeTime").innerText = `до конца ${lessons[i].order}-го урока`;
+            }
+            document.getElementById("timeBeforeEndMinuts").innerHTML = `${Math.floor(((time - timeInSeconds) % 3600) / 60)}`;
+            document.getElementById("timeBeforeEndSeconds").innerHTML = `${Math.floor(((time - timeInSeconds)) % 60)}`;
+        }, 1000);
+
+        function getTimeInSeconds(time) {
+            let resultTime = time;
+
+            if (typeof time === 'string') {
+                if (time.split(':').length > 1) {
+                    const [hours, minutes] = time.split(':');
+
+                    if (isNaN(+hours) || isNaN(+minutes)) {
+                        throw 'Incorrect Time String (should be like "9:30")'
+                    }
+
+                    resultTime = (+hours * 60 + +minutes) * 60;
+                }
+            }
+
+            if (isNaN(+resultTime)) {
+                throw 'incorrect type of time, (should be string like "9:30") or number (countOfMinutesFromStartDay)';
+            }
+
+            return resultTime;
+        }
+    </script>
+    <script>
+        // var boxShadowStyle = `inset 0 ${(document.getElementById("hHolderInSchool").offsetHeight * 80 / 100)}px 0 0 #80F2FF`;
+        // console.log(boxShadowStyle);
+        // document.getElementById("hHolderInSchool").style.boxShadow = boxShadowStyle;
+
+        async function getAndSetWeatherData() {
+            let myData;
+            await fetch('http://localhost:5102/api/weather')
+                .then(res => {
+                    return res.json();
+                })
+                .then(data => {
+                    myData = data;
+                })
+                .catch(error => console.log(error));
+            let temp = myData.main.temp;
+            let humidity = myData.main.humidity;
+            let pressure = myData.main.pressure;
+
+            document.getElementById("outDoorPressureHolder").innerText = pressure;
+            document.getElementById("outDoorTempHolder").innerText = (temp - 273.15).toFixed(1);
+            document.getElementById("outDoorHumidityHolder").innerText = humidity;
+            document.getElementById("inSchoolTempHolder").innerText = (temp - 273.15 - 2).toFixed(1);
+            document.getElementById("inSchoolHumidityHolder").innerText = humidity;
+
+            var boxShadowStyle = `inset 0 ${(document.getElementById("hHolderInSchool").offsetHeight * ((100 - humidity) / 100))}px 0 0 #aebbc9`;
+            document.getElementById("hHolderInSchool").style.boxShadow = boxShadowStyle;
+            console.log("im there");
+        };
+
+        getAndSetWeatherData();
+
+        setInterval(() => {
+            getAndSetWeatherData();
+        }, 300000);
+    </script>
+}

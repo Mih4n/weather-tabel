@@ -18,6 +18,7 @@ namespace dotnet_site.Controllers
         [HttpGet]
         public async Task<IActionResult> GetWeather()
         {
+            Console.WriteLine(configuration.GetValue<string>("WeatherMapKey")+"is it ex");
             var cachedData = (string)cache.Get("weather");
             string result;
             if(cachedData != null)

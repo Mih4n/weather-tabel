@@ -1,30 +1,19 @@
 using dotnet_site.Database;
 using Microsoft.EntityFrameworkCore;
 
-var builder = WebApplication.CreateBuilder(args);
+namespace dotnet_site;
 
-// Add services to the container.
-builder.Services.AddRazorPages();
-builder.Services.AddControllers();
-builder.Services.AddMemoryCache();
-builder.Services.AddDbContext<AppDbContext>(o => o.UseNpgsql(""));
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+public class Program
 {
-    app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    static void Main()
+        => CreateHostBuilder().Build().Run();
+
+    private static IHostBuilder CreateHostBuilder() 
+    {
+        return Host.CreateDefaultBuilder()
+        .ConfigureWebHostDefaults(webHost => {
+            webHost.UseStartup<Startup>();
+            webHost.UseKestrel(kestrelOptions => { kestrelOptions.ListenAnyIP(5005); });
+        });
+    }
 }
-
-app.UseStaticFiles();
-app.UseRouting();
-
-app.UseAuthorization();
-
-app.MapRazorPages();
-app.MapControllers();
-
-app.Run();

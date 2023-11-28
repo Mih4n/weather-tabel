@@ -32,16 +32,13 @@ public class Startup
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Employee API V1");
-            });
         }
 
         app.UseStaticFiles();
         app.UseRouting();
         app.UseCors();
+        app.UseSwagger();
+        app.UseSwaggerUI();
 
         app.UseAuthentication();
         app.UseAuthorization();
